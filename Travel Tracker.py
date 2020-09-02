@@ -8,18 +8,15 @@ def main():
     print(len(list_places), "places loaded from places.csv")
     arranged_list = list_places
     for place in arranged_list:
-        if place[3] == "v":
+        if place[3] == "n":
             place[3] = "*"
         else:
             place[3] = ""
     arranged_list.sort()
-    # print(arranged_list)
-    display_list(arranged_list)
     program_continue = True
     while program_continue:
-        print("L - List places", "A - Add new place", "M - Mark place as visited", "Q - Quit", sep="\n")
-        # TODO: Not correct handling just placeholder --
-        user_choice = input(">>")
+        print("Menu:", "L - List places", "A - Add new place", "M - Mark place as visited", "Q - Quit", sep="\n")
+        user_choice = input(">>> ")
         program_continue = menu(arranged_list, user_choice)
 
 
@@ -29,35 +26,45 @@ def menu(places, user_choice):
     if menu_choice == "L":
         # Comment// Prints places; in ascending order. (relative to priority with places visited as top)
         display_list(places)
+        # Comment// Loop to check how many places are visited, then print result
+        not_visited = 0
+        for location in places:
+            if location[3] == "*":
+                not_visited += 1
+        print("{} places. You still want to visit {} places.".format(len(places), not_visited))
     elif menu_choice == "A":
         # Comment// Asks for a new location, appends to a list, which is added to the master list.
-        # TODO: This is just a placeholder not correct handling
         new_location.append(input("Name: "))
         new_location.append(input("Country: "))
         new_location.append(input("Priority: "))
-        new_location.append("")
+        new_location.append("*")
         places.append(new_location)
     elif menu_choice == "M":
-        # Comment//
+        # Comment// Mark a place as visited
         display_list(places)
     elif menu_choice == "Q":
         # say places saved
         print("Have a nice day :)")
-        return True
+        return False
     else:
         # TODO: Not correct handling; just placeholder --
-        print("Incorrect Response: Please Try Again")
-    return False
-
-
-def type_check(given_type):
-    # TODO: Finish this during last update to help with user handling
-    return given_type
+        print("Invalid menu choice")
+    return True
 
 
 def display_list(given_list):
-    # TODO: This is just a placeholder and not correct handling
+    list_numeric = 1
+    # Comment// Had to use two loops here for sorting if place was visited.
     for index in given_list:
-        print("{} {} {} {}".format(index[3], index[0], index[1], index[2]))
+        if index[3] == "*":
+            print("{:<2}{}. {:<8} {:^5} {:<12} {} {:>5}".format(index[3], list_numeric, index[0], "in", index[1],
+                                                                "priority", index[2]))
+            list_numeric += 1
+    for index in given_list:
+        if index[3] == "":
+            print("{:<2}{}. {:<8} {:^5} {:<12} {} {:>5}".format(index[3], list_numeric, index[0], "in", index[1],
+                                                                "priority", index[2]))
+            list_numeric += 1
+
 
 main()
