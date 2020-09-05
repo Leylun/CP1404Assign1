@@ -1,4 +1,5 @@
 import csv
+updated_list = []
 
 
 def main():
@@ -18,9 +19,14 @@ def main():
         print("Menu:", "L - List places", "A - Add new place", "M - Mark place as visited", "Q - Quit", sep="\n")
         user_choice = input(">>> ")
         program_continue = menu(arranged_list, user_choice)
+    # Comment// Print Places Saved
+    display_list(updated_list)
+    print("Have a nice day :)")
 
 
 def menu(places, user_choice):
+    # Comment// Calling global as alternative methods to retrieve places would be tedious
+    global updated_list
     new_location = []
     menu_choice = user_choice.upper()
     if menu_choice == "L":
@@ -34,8 +40,30 @@ def menu(places, user_choice):
         print("{} places. You still want to visit {} places.".format(len(places), not_visited))
     elif menu_choice == "A":
         # Comment// Asks for a new location, appends to a list, which is added to the master list.
-        new_location.append(input("Name: "))
-        new_location.append(input("Country: "))
+
+        given_name = input("Name: ")
+        while string_check(given_name):
+            given_name = input("Name: ")
+        new_location.append(given_name)
+
+        given_country = input("Country: ")
+        while string_check(given_country):
+            given_country = input("Country: ")
+        new_location.append(given_country)
+        # Comment// Loop to make sure both checks are met before value is appended to the list
+        while True:
+            try:
+                given_priority = int(input("Priority: "))
+            except ValueError:
+                print("Invalid Input; enter a valid number")
+                continue
+            try:
+                if given_priority < 1:
+                    print("Number must be > 0")
+            except ValueError:
+                continue
+            else:
+                break
         new_location.append(input("Priority: "))
         new_location.append("*")
         places.append(new_location)
@@ -43,13 +71,19 @@ def menu(places, user_choice):
         # Comment// Mark a place as visited
         display_list(places)
     elif menu_choice == "Q":
-        # say places saved
-        print("Have a nice day :)")
+        updated_list = places
         return False
     else:
-        # TODO: Not correct handling; just placeholder --
         print("Invalid menu choice")
     return True
+
+
+def string_check(given_string):
+    if given_string == "":
+        return True
+    else:
+        print("Input can not be blank.")
+        return False
 
 
 def display_list(given_list):
