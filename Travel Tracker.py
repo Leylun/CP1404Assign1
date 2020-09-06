@@ -40,7 +40,6 @@ def menu(places, user_choice):
         print("{} places. You still want to visit {} places.".format(len(places), not_visited))
     elif menu_choice == "A":
         # Comment// Asks for a new location, appends to a list, which is added to the master list.
-
         given_name = input("Name: ")
         while string_check(given_name):
             given_name = input("Name: ")
@@ -57,19 +56,46 @@ def menu(places, user_choice):
             except ValueError:
                 print("Invalid Input; enter a valid number")
                 continue
-            try:
+            else:
                 if given_priority < 1:
                     print("Number must be > 0")
-            except ValueError:
-                continue
-            else:
-                break
-        new_location.append(input("Priority: "))
+                    continue
+                else:
+                    break
+        new_location.append(given_priority)
         new_location.append("*")
         places.append(new_location)
+        print("{} in {} ({}) added to Travel Tracker".format(new_location[0], new_location[1], new_location[2]))
+
     elif menu_choice == "M":
         # Comment// Mark a place as visited
-        display_list(places)
+        not_visited_places = 0
+        for place in places:
+            if place[3] == "*":
+                not_visited_places += 1
+        if not_visited_places != 0:
+            display_list(places)
+            not_visited = 0
+            for location in places:
+                if location[3] == "*":
+                    not_visited += 1
+            print("{} places. You still want to visit {} places.".format(len(places), not_visited))
+            while True:
+                try:
+                    place_value = int(input(">>> "))
+                except ValueError:
+                    print("Invalid Input; enter a valid number")
+                    continue
+                else:
+                    if place_value < 1:
+                        print("Number must be > 0")
+                    else:
+                        place_list = places[place_value]
+                        if place_list[3] == "":
+                            print("That place is already visited")
+                        else:
+                            place_list[3] = ""
+                            print("{} in {} visited!".format(place_list[0], place_list[1]))
     elif menu_choice == "Q":
         updated_list = places
         return False
@@ -87,6 +113,7 @@ def string_check(given_string):
 
 
 def display_list(given_list):
+    given_list.sort()
     list_numeric = 1
     # Comment// Had to use two loops here for sorting if place was visited.
     for index in given_list:
